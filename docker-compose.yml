@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: agroconecta_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-agroconecta_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-agroconecta_pass}
+      POSTGRES_DB: ${POSTGRES_DB:-agroconecta_db}
+    ports:
+      - "5432:5432"
+    volumes:
+      - agroconecta_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-agroconecta_user}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - agroconecta_net
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: agroconecta_backend
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DATABASE_URL: postgresql://${POSTGRES_USER:-agroconecta_user}:${POSTGRES_PASSWORD:-agroconecta_pass}@postgres:5432/${POSTGRES_DB:-agroconecta_db}?schema=public
+      JWT_SECRET: ${JWT_SECRET:-super_secreto_cambiar_en_produccion_2024}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-1d}
+    ports:
+      - "3000:3000"
+    command: >
+      sh -c "npx prisma migrate deploy && node src/server.js"
+    networks:
+      - agroconecta_net
+
+volumes:
+  agroconecta_pgdata:
+
+networks:
+  agroconecta_net:
+    driver: bridge

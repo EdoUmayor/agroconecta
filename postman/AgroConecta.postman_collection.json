@@ -1,0 +1,139 @@
+{
+  "info": {
+    "name": "AgroConecta API",
+    "description": "Coleccion de pruebas para la API de AgroConecta",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3000" },
+    { "key": "token", "value": "" },
+    { "key": "farmId", "value": "" },
+    { "key": "cropId", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "1. Registrar agricultor",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{baseUrl}}/api/farmers/register",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Maria Gonzalez\",\n  \"email\": \"maria.gonzalez@agroconecta.cl\",\n  \"password\": \"123456\",\n  \"phone\": \"+56912345678\"\n}"
+        }
+      }
+    },
+    {
+      "name": "2. Login",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{baseUrl}}/api/farmers/login",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"maria.gonzalez@agroconecta.cl\",\n  \"password\": \"123456\"\n}"
+        }
+      }
+    },
+    {
+      "name": "3. Ver mi perfil",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "url": "{{baseUrl}}/api/farmers/me"
+      }
+    },
+    {
+      "name": "4. Crear finca",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": "{{baseUrl}}/api/farms",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Finca El Rosal\",\n  \"location\": \"Curico, Chile\",\n  \"sizeHa\": 12.5\n}"
+        }
+      }
+    },
+    {
+      "name": "5. Listar mis fincas",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "url": "{{baseUrl}}/api/farms"
+      }
+    },
+    {
+      "name": "6. Crear cultivo",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": "{{baseUrl}}/api/crops",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Tomate\",\n  \"farmId\": 1,\n  \"plantedDate\": \"2026-03-01\",\n  \"expectedHarvestDate\": \"2026-06-15\"\n}"
+        }
+      }
+    },
+    {
+      "name": "7. Listar cultivos",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "url": "{{baseUrl}}/api/crops"
+      }
+    },
+    {
+      "name": "8. Registrar cosecha",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": "{{baseUrl}}/api/harvests",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"cropId\": 1,\n  \"harvestDate\": \"2026-06-20\",\n  \"quantityKg\": 340.5,\n  \"qualityGrade\": \"A\",\n  \"notes\": \"Buen rendimiento\"\n}"
+        }
+      }
+    },
+    {
+      "name": "9. Listar cosechas",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "url": "{{baseUrl}}/api/harvests"
+      }
+    },
+    {
+      "name": "10. Actualizar finca",
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": "{{baseUrl}}/api/farms/1",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"sizeHa\": 15\n}"
+        }
+      }
+    },
+    {
+      "name": "11. Eliminar cultivo",
+      "request": {
+        "method": "DELETE",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "url": "{{baseUrl}}/api/crops/1"
+      }
+    }
+  ]
+}

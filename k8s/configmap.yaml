@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: agroconecta
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: agroconecta-config
+  namespace: agroconecta
+data:
+  NODE_ENV: "production"
+  PORT: "3000"
+  POSTGRES_DB: "agroconecta_db"
+  JWT_EXPIRES_IN: "1d"
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: agroconecta-secrets
+  namespace: agroconecta
+type: Opaque
+stringData:
+  POSTGRES_USER: "agroconecta_user"
+  POSTGRES_PASSWORD: "agroconecta_pass"
+  JWT_SECRET: "super_secreto_cambiar_en_produccion_2024"
+  # DATABASE_URL apunta al Service interno de postgres (postgres-service)
+  DATABASE_URL: "postgresql://agroconecta_user:agroconecta_pass@postgres-service:5432/agroconecta_db?schema=public"
